@@ -1,4 +1,4 @@
-package com.Brewery.Manager.models;
+package com.brewery.manager.models;
 
 public class Wholesaler {
     

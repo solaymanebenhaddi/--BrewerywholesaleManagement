@@ -1,4 +1,4 @@
-package com.Brewery.Manager;
+package com.brewery.manager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
