@@ -31,6 +31,10 @@ public class Beer {
     @JoinColumn(name = "id_brewerie", referencedColumnName = "id_brewerie")
     private Brewerie brewerie;
 
+    public Beer(){
+        super();
+    }
+
     public Beer(@NotNull String name,@NotNull String alcohol,@NotNull double price){
         super();
         this.Name=name;
