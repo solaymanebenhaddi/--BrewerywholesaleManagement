@@ -1,41 +1,49 @@
 package com.brewery.manager.services;
 
 import java.util.List;
-import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.brewery.manager.DAO.PublicDAO;
+import com.brewery.manager.Dto.WholeSalerDTO;
 import com.brewery.manager.models.Wholesaler;
 
-public class wholesalerImpl implements PublicDAO<Wholesaler> {
+
+@Service
+@Transactional
+public class wholesalerImpl implements PublicDAO<WholeSalerDTO> {
 
     @Override
-    public Wholesaler create(Wholesaler o) {
+    public WholeSalerDTO create(WholeSalerDTO o) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public void update(Wholesaler o) {
+    public WholeSalerDTO update(WholeSalerDTO o) {
+        return o;
         // TODO Auto-generated method stub
         
     }
 
-    @Override
-    public void delete(Wholesaler o) {
-        // TODO Auto-generated method stub
-        
-    }
 
     @Override
-    public List<Wholesaler> findAll() {
+    public List<WholeSalerDTO> findAll() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Optional<Wholesaler> findById(long id) {
+    public WholeSalerDTO findById(long id) {
         // TODO Auto-generated method stub
-        return Optional.empty();
+        return null;
+    }
+
+    @Override
+    public void delete(Long id) throws Exception {
+        // TODO Auto-generated method stub
+        
     }
     
 }

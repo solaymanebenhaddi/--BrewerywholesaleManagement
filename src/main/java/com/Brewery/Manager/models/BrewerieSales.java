@@ -1,5 +1,7 @@
 package com.brewery.manager.models;
 
+import java.time.LocalDate;
+
 import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -14,7 +16,7 @@ import lombok.Data;
 @Entity
 @Table(name = "Beer_wholesaler")
 @Data
-public class StockBeerSaler {
+public class BrewerieSales {
     @EmbeddedId
     private BeerWholesaleIDs id;
 
@@ -31,16 +33,19 @@ public class StockBeerSaler {
 
 
     private Long quantity;
+    private double price_transaction;
+    private LocalDate dateofsale;
 
-    public StockBeerSaler(){
+    public BrewerieSales(){
        super(); 
     }
 
-    public StockBeerSaler(Beer beer,Wholesaler wholesaler,long quantity){
+    public BrewerieSales(Beer beer,Wholesaler wholesaler,double price,long quantity){
         super(); 
         this.id =  new BeerWholesaleIDs(beer.getId_beer(),wholesaler.getId_wholesale());
         this.beer=beer;
         this.wholesaler=wholesaler;
+        this.price_transaction=price;
         this.quantity=quantity;
      }
 
