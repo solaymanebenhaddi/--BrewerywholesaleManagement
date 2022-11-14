@@ -28,18 +28,19 @@ public class Beer {
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @MapsId("id_brewerie")
-    @JoinColumn(name = "id_brewerie", referencedColumnName = "id_brewerie")
+    @JoinColumn(name = "id_brewerie", referencedColumnName = "id_brewerie",nullable = false, columnDefinition = "int default 1")
     private Brewerie brewerie;
 
     public Beer(){
         super();
     }
 
-    public Beer(@NotNull String name,@NotNull String alcohol,@NotNull double price){
+    public Beer(@NotNull String name,@NotNull String alcohol,@NotNull double price,Brewerie brewerie){
         super();
         this.Name=name;
         this.Alcohol=alcohol;
         this.Price=price;
+        this.brewerie=brewerie;
 
     }
     

@@ -1,17 +1,12 @@
-package com.brewery.manager.Dto;
-
-import java.util.List;
-
-
+package com.brewery.manager.payload.request;
 
 import lombok.Data;
 
 @Data
-public class BrewerieDTO {
+public class BrewerieRequest {
 
     private long id_brewerie;
     private String Name;
     private String Adresse;
-    private List<BeerDTO> beers;
     
 }

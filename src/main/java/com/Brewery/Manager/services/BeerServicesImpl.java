@@ -33,7 +33,7 @@ public class BeerServicesImpl implements PublicDAO<BeerDTO> {
     @Override
     public BeerDTO create(BeerDTO beerrequ) throws Exception {
         
-        Brewerie brewerie= brewrepo.findById(beerrequ.getBrewerie_id()).orElseThrow(() -> new Exception("Brewerie not found"));
+        Brewerie brewerie= brewrepo.findById(beerrequ.getId_brewerie()).orElseThrow(() -> new Exception("Brewerie not found"));
         Beer beer=new Beer();
         beer.setName(beerrequ.getName());
         beer.setPrice(beerrequ.getPrice());
@@ -46,15 +46,15 @@ public class BeerServicesImpl implements PublicDAO<BeerDTO> {
 
     @Override
     public BeerDTO update(BeerDTO beerrequ) throws Exception {
-        Beer beer= beerrepo.findById(beerrequ.getId()).orElseThrow(() -> new Exception("Beer not found"));
-        Brewerie brewerie= brewrepo.findById(beerrequ.getBrewerie_id()).orElseThrow(() -> new Exception("Brewerie not found"));
+        Beer beer= beerrepo.findById(beerrequ.getId_beer()).orElseThrow(() -> new Exception("Beer not found"));
+        Brewerie brewerie= brewrepo.findById(beerrequ.getId_brewerie()).orElseThrow(() -> new Exception("Brewerie not found"));
         beer.setName(beerrequ.getName());
         beer.setPrice(beerrequ.getPrice());
         beer.setAlcohol(beerrequ.getAlcohol());
         beer.setBrewerie(brewerie);
         beerrepo.save(beer);
-        BeerDTO Brdto = mapper.map(beer,BeerDTO.class);
-        return Brdto;
+        return mapper.map(beer,BeerDTO.class);
+        
         
     }
 

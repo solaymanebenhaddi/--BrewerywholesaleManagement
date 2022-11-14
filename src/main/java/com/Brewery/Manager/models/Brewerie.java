@@ -23,13 +23,18 @@ public class Brewerie {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private long id_brewerie;
+    private Long id_brewerie;
     private String Name;
     private String Adresse;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "brewerie")
     @Fetch(FetchMode.SELECT)
     private List<Beer> beer;
+    
+
+    public Brewerie(){
+        super();
+    }
 
     public Brewerie(@NotNull String name,@NotNull String adresse){
         super();

@@ -13,6 +13,8 @@ import com.brewery.manager.DAO.PublicDAO;
 import com.brewery.manager.Dto.BrewerieDTO;
 import com.brewery.manager.models.Beer;
 import com.brewery.manager.models.Brewerie;
+import com.brewery.manager.repository.BrewerieRepository;
+import com.brewery.manager.util.BrewMapper;
 @Transactional
 @Service
 
@@ -21,10 +23,19 @@ public class BrowerieServicesImpl implements PublicDAO<BrewerieDTO> {
     @Autowired
     private BeerServicesImpl beerservices;
 
+    @Autowired
+    private BrewerieRepository brewrepo;
+
+    @Autowired
+    private BrewMapper mapper;
+
     @Override
     public BrewerieDTO create(BrewerieDTO o) {
-        // TODO Auto-generated method stub
-        return null;
+        Brewerie brewerie=new Brewerie();
+        brewerie.setAdresse(o.getAdresse());
+        brewerie.setName(o.getName());
+        brewrepo.save(brewerie);
+        return mapper.map(brewerie, BrewerieDTO.class);
     }
 
     @Override

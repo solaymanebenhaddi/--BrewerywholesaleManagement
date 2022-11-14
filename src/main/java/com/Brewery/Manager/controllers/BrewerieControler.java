@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.brewery.manager.Dto.BeerDTO;
+import com.brewery.manager.Dto.BrewerieDTO;
 import com.brewery.manager.models.Beer;
 import com.brewery.manager.services.BeerServicesImpl;
 import com.brewery.manager.services.BrowerieServicesImpl;
@@ -44,11 +45,17 @@ public class BrewerieControler {
     }
 
     @PostMapping("/addbeer")
-    public Beer AddBeer(@RequestBody BeerDTO beer){
+    public BeerDTO AddBeer(@RequestBody BeerDTO beer) throws Exception{
+        beerservices.create(beer);
+        return mapper.map(beer, BeerDTO.class);
+   
+    }
 
-        
-        return null;
-        
+    @PostMapping("/addbrewerie")
+    public BrewerieDTO addbrewerie(@RequestBody BrewerieDTO brewerieDTO) throws Exception{
+        BrewerieDTO brew=brewservices.create(brewerieDTO);
+        return brew;
+   
     }
     
 }
