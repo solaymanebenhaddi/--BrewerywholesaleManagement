@@ -97,7 +97,15 @@
 							<scope>provided</scope>
 						</exclude>
 					</excludes>
+					<mainClass>com.brewery.manager</mainClass>
 				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

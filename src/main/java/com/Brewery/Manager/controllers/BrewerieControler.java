@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.brewery.manager.Dto.BeerDTO;
 import com.brewery.manager.Dto.BrewerieDTO;
+import com.brewery.manager.Dto.BrewerieSalesDTO;
 import com.brewery.manager.models.Beer;
+import com.brewery.manager.models.BrewerieSales;
 import com.brewery.manager.services.BeerServicesImpl;
+import com.brewery.manager.services.BrewerieSalesServices;
 import com.brewery.manager.services.BrowerieServicesImpl;
 import com.brewery.manager.util.BrewMapper;
 
@@ -31,6 +34,9 @@ public class BrewerieControler {
 
     @Autowired
     private BeerServicesImpl beerservices;
+
+    @Autowired
+    private BrewerieSalesServices brewerieSalesServices;
 
     @Autowired
     private BrewMapper mapper;
@@ -57,5 +63,16 @@ public class BrewerieControler {
         return brew;
    
     }
+
+
+    @PostMapping("/NewSale")
+    public BrewerieSalesDTO addNewSale(@RequestBody BrewerieSalesDTO Salerequest) throws Exception{
+        BrewerieSalesDTO sale = brewerieSalesServices.create(Salerequest);
+        return sale;
+   
+    }
+
+
+
     
 }

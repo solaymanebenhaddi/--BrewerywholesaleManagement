@@ -1,9 +1,9 @@
-package com.brewery.manager.Dto;
+package com.brewery.manager.payload.request;
 
 import lombok.Data;
 
 @Data
-public class WholeSalerDTO {
+public class WholesalerRequest {
     private long id_wholesale;
     private String Name;
     private String Adresse;
