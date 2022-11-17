@@ -16,4 +16,7 @@ public interface BeerInwareHouseRepository extends JpaRepository<BeerInWarehouse
 
     @Query(value = "SELECT * FROM beer_in_warehouse WHERE id_beer=?1 AND id_warehouse=?2 ",nativeQuery = true)
     public Optional<BeerInWarehouse> getByIds(long id_beer, Long id_warehouse);
+
+    @Query(value = "SELECT * FROM beer_in_warehouse WHERE id_beer=?1 AND id_warehouse=?2 AND existing_beer_qte>=?3 ",nativeQuery = true)
+    public Optional<BeerInWarehouse> getByIdsandQte(long id_beer, Long id_warehouse,long qte);
 }

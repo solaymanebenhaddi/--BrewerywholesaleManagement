@@ -20,7 +20,7 @@ import lombok.Data;
 public class BeerInWarehouse {
 
     @EmbeddedId
-    private BeerInWarehouseIDs id;
+    private BeerInWarehouseIDs idbw;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @MapsId("id_beer")
@@ -36,13 +36,14 @@ public class BeerInWarehouse {
     private Long ExistingBeerQte;
 
 
+
     public BeerInWarehouse(){
         super(); 
      }
  
      public BeerInWarehouse(Beer beer,Warehouse warehouse,long quantity){
          super(); 
-         this.id =  new BeerInWarehouseIDs(beer.getId_beer(),warehouse.getId_warehouse());
+         this.idbw =  new BeerInWarehouseIDs(beer.getId_beer(),warehouse.getId_warehouse());
          this.beer=beer;
          this.warehouse=warehouse;
          this.ExistingBeerQte=quantity;
