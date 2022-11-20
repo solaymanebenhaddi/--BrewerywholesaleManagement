@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,26 +75,33 @@ public class BrewerieSalesServices implements PublicDAO<BrewerieSaleRequest> {
 
     @Override
     public BrewerieSalesDTO update(BrewerieSaleRequest o) throws Exception {
-        Wholesaler wholesale = wholesalerep.findById(o.getId_wholesale())
-                .orElseThrow(() -> new ResourceNotFoundException("Brewerie not whaole seller"));
-        Beer beer = beerrepo.findById(o.getId_beer())
-                .orElseThrow(() -> new ResourceNotFoundException("Brewerie not whaole seller"));
-
-       Optional<BrewerieSales> bresales= BrewSalesRep.getBrewerieSalesByIds(beer.getId_beer(), wholesale.getId_wholesale());
-       if(bresales.isPresent()){
-        BrewerieSales brewerieSales=bresales.get();
+        try {
+            
+            Wholesaler wholesale = wholesalerep.findById(o.getId_wholesale())
+                    .orElseThrow(() -> new ResourceNotFoundException("Brewerie not whaole seller"));
+            Beer beer = beerrepo.findById(o.getId_beer())
+                    .orElseThrow(() -> new ResourceNotFoundException("Brewerie not whaole seller"));
+    
+           Optional<BrewerieSales> bresales= BrewSalesRep.getBrewerieSalesByIds(beer.getId_beer(), wholesale.getId_wholesale());
+           if(bresales.isPresent()){
+            BrewerieSales brewerieSales=bresales.get();
+            
+            brewerieSales.setDateofsale(o.getDateofsale());
+            brewerieSales.setPrice_transaction(beer.getPrice()*o.getQuantity());
+            BrewSalesRep.save(brewerieSales);
+            return mapper.map(brewerieSales, BrewerieSalesDTO.class);
+    
+           }
+            else throw new ResourceNotFoundException("No Matching found for this sale");
         
-        brewerieSales.setDateofsale(o.getDateofsale());
-        brewerieSales.setPrice_transaction(beer.getPrice()*o.getQuantity());
-        BrewSalesRep.save(brewerieSales);
-        return mapper.map(brewerieSales, BrewerieSalesDTO.class);
-
-       }
-        else throw new ResourceNotFoundException("No Matching found for this sale");
+        } catch (Exception e) {
+        throw new Exception(e.getMessage());
+        }
     }
 
     @Override
-    public void delete(Long id) throws Exception {
+    public ResponseEntity<?> delete(Long id) throws Exception {
+        return null;
         // TODO Auto-generated method stub
 
     }

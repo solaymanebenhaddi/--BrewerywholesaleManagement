@@ -6,6 +6,7 @@ import java.util.Optional;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,17 +61,27 @@ public class BeerServicesImpl implements PublicDAO<BeerDTO> {
     }
 
     @Override
-    public void delete(Long id) throws Exception {
-        Beer beer= beerrepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Beer not found"));
-        beerrepo.deleteById(beer.getId_beer());
+    public ResponseEntity<?> delete(Long id) throws Exception {
+        try {
+            Beer beer= beerrepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Beer not found"));
+            beerrepo.deleteById(beer.getId_beer());
+            ResponseEntity.status(200).build();
+            return ResponseEntity.ok(" beer has been deleted seccessefully"); 
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+        
 
     }
 
     @Override
-    public List<BeerDTO> findAll() {
-        List<Beer> beers= beerrepo.findallBeers();
-        return  (List<BeerDTO>) mapper.map(beers,BeerDTO.class); 
-       
+    public List<BeerDTO> findAll() throws Exception {
+        try {
+            List<Beer> beers= beerrepo.findallBeers();
+            return  (List<BeerDTO>) mapper.map(beers,BeerDTO.class); 
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
         
        

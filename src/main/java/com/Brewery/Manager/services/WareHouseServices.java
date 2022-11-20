@@ -3,6 +3,7 @@ package com.brewery.manager.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,26 +40,51 @@ private WholesaleRepository salerrepo;
 
     @Override
     public WareHouseDTO update(WarehouseRequest o) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+        try{
+            Warehouse ware= warerepo.findById(o.getId_warehouse()).orElseThrow(()->new ResourceNotFoundException("No matching found"));
+            Wholesaler saler= salerrepo.findById(o.getId_wholesale()).orElseThrow(()->new ResourceNotFoundException("No matching found"));
+        ware.setAdresse(o.getAdresse());
+        ware.setWholesaler(saler);
+        warerepo.save(ware);
+        return mapper.map(warehouse, WareHouseDTO.class);
+        }catch (Exception e) {
+            throw new Exception(e.getMessage());
+            }
     }
 
     @Override
-    public void delete(Long id) throws Exception {
-        // TODO Auto-generated method stub
+    public ResponseEntity<?> delete(Long id) throws Exception {
+        try{
+            Wholesaler saler= salerrepo.findById(id).orElseThrow(()->new ResourceNotFoundException("No matching found"));
+            salerrepo.delete(saler);
+            ResponseEntity.status(200).build();
+            return ResponseEntity.ok("Deleted Seccessefully");
+
+        }
+        catch (Exception e) {
+            throw new Exception(e.getMessage());
+            }
         
     }
 
     @Override
-    public List<?> findAll() {
-        // TODO Auto-generated method stub
-        return null;
+    public List<?> findAll() throws Exception {
+    try{
+        return warerepo.findAll();
+    }catch (Exception e) {
+        throw new Exception(e.getMessage());
+        }
+    
     }
-
     @Override
     public WareHouseDTO findById(long id) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+   
+        try{
+            Warehouse ware= warerepo.findById(id).orElseThrow(()->new ResourceNotFoundException("No matching found"));
+            return mapper.map(ware, WareHouseDTO.class);
+        }catch (Exception e) {
+            throw new Exception(e.getMessage());
+            }
     }
     
 }

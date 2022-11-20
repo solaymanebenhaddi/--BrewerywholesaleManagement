@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,9 +78,22 @@ public class BeerInWareHouseServices implements PublicDAO<BeerinwhRequest> {
     }
 
     @Override
-    public void delete(Long id) throws Exception {
-        // TODO Auto-generated method stub
+    public ResponseEntity<?> delete(Long id) throws Exception {
+        return null;
         
+    }
+
+    public ResponseEntity<?> DeletByIDs(BeerinwhRequest o) throws Exception{
+
+        try {
+            BeerInWarehouse beerinstock = beerhouserepo.getByIds(o.getId_beer(), o.getId_warehouse()).orElseThrow(()->new ResourceNotFoundException("No Matching Found"));
+            beerhouserepo.delete(beerinstock);
+            ResponseEntity.status(200).build();
+            return ResponseEntity.ok(" deleted seccessefully"); 
+        } catch (Exception e) {
+           throw new Exception(e.getMessage());
+        }
+       
     }
 
     @Override

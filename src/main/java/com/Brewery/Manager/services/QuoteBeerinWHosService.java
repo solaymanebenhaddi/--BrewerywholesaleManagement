@@ -90,21 +90,44 @@ public class QuoteBeerinWHosService implements PublicDAO<QuoteBrInWHouseRequest>
     }
 
     @Override
-    public void delete(Long id) throws Exception {
-        // TODO Auto-generated method stub
+    public ResponseEntity<?> delete(Long id) throws Exception {
+       return null;
+        
+    }
+
+  
+    public ResponseEntity<?> deleteQuoteBeer(QuoteBrInWHouseRequest o) throws Exception {
+        try{
+            QuoteBeerInWrhouse quoteBeerInWrhouse=quotbwrepo.isQuotehasBeer(o.getId_dev(),o.getId_beer()).orElseThrow(()->new ResourceNotFoundException("NO match found"));
+            quotbwrepo.delete(quoteBeerInWrhouse);
+            ResponseEntity.status(200).build();
+            return ResponseEntity.ok("Quot of beer its been deleted seccessefully");
+        }catch (Exception e) {
+            throw new Exception(e.getMessage());
+            }
         
     }
 
     @Override
-    public List<?> findAll() {
+    public List<?> findAll() throws Exception {
+        try {
+            return quotbwrepo.findAll();
+        
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
        
-        return quotbwrepo.findAll();
     }
 
     @Override
     public List<QuoteBeerInWrhouse> findById(long id) throws Exception {
+        try {
+            List<QuoteBeerInWrhouse> qtbeerhouse=quotbwrepo.getAllQuoteByIdquote(id);
+            return qtbeerhouse; 
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
         
-        return quotbwrepo.getQuoteBeerByQuoteID(id);
     }
 
     public ResponseEntity<QuoteResponse> GenerateQuate(long id_devis) throws Exception{
@@ -121,7 +144,8 @@ public class QuoteBeerinWHosService implements PublicDAO<QuoteBrInWHouseRequest>
         quoteResponse.setId_dev(quote.getId_devis());
         quoteResponse.setDay(quote.getDateqoute().getDayOfWeek());
         quoteResponse.setDatetransaction(quote.getDateqoute());
-        quoteResponse.setQuoteBeerInWrhouses(allquote);  
+        quoteResponse.setQuoteBeerInWrhouses(// A list of all the beers in the warehouse.
+        allquote);  
 
         return ResponseEntity.accepted().body(quoteResponse);
 
