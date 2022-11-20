@@ -39,7 +39,9 @@ public class BeerInWareHouseServices implements PublicDAO<BeerinwhRequest> {
 
     @Override
     public BeerInwhDTO create(BeerinwhRequest o) throws Exception {
-        Beer beer= beerrepo.findById(o.getId_beer()).orElseThrow(()->new ResourceNotFoundException("No Matching found"));
+
+        try {
+            Beer beer= beerrepo.findById(o.getId_beer()).orElseThrow(()->new ResourceNotFoundException("No Matching found"));
             Warehouse warehouse= warerepo.findById(o.getId_warehouse()).orElseThrow(()->new ResourceNotFoundException("No Matching found"));
 
         Optional<BeerInWarehouse> Isbeerinstock = beerhouserepo.getByIds(o.getId_beer(), o.getId_beer());
@@ -54,12 +56,19 @@ public class BeerInWareHouseServices implements PublicDAO<BeerinwhRequest> {
             
         }
         return null;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+        
     
     }
 
     @Override
     public BeerInwhDTO update(BeerinwhRequest o) throws Exception {
-       BeerInWarehouse beerinstock = beerhouserepo.getByIds(o.getId_beer(), o.getId_warehouse()).orElseThrow(()->new ResourceNotFoundException("No Matching Found"));
+
+        try {
+
+            BeerInWarehouse beerinstock = beerhouserepo.getByIds(o.getId_beer(), o.getId_warehouse()).orElseThrow(()->new ResourceNotFoundException("No Matching Found"));
         //check if the stock is emty or not
         Long existingStock=null;
         if(o.getQuantity()>0){
@@ -75,7 +84,12 @@ public class BeerInWareHouseServices implements PublicDAO<BeerinwhRequest> {
              return mapper.map(beerinstock, BeerInwhDTO.class);
         }
         else throw new ResourceNotFoundException("This beer is no more availible");
-    }
+    
+            
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+       }
 
     @Override
     public ResponseEntity<?> delete(Long id) throws Exception {
@@ -97,15 +111,31 @@ public class BeerInWareHouseServices implements PublicDAO<BeerinwhRequest> {
     }
 
     @Override
-    public List<?> findAll() {
-        // TODO Auto-generated method stub
-        return null;
+    public List<?> findAll() throws Exception {
+        try {
+            List<BeerInWarehouse> beerInWarehouses=beerhouserepo.findAll();
+            return beerInWarehouses;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+       
     }
 
     @Override
     public BeerInwhDTO findById(long id) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+       return null;
+
     }
+
+    public BeerInwhDTO findOneByIDs(BeerinwhRequest o) throws Exception {
+        try {
+            BeerInWarehouse beerinstock = beerhouserepo.getByIds(o.getId_beer(), o.getId_warehouse()).orElseThrow(()->new ResourceNotFoundException("No Matching Found"));
+            return mapper.map(beerinstock, BeerInwhDTO.class);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+ 
+     }
+   
     
 }

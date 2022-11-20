@@ -88,19 +88,27 @@ public class BeerServicesImpl implements PublicDAO<BeerDTO> {
 
     @Override
     public BeerDTO findById(long id) throws Exception {
-        // TODO Auto-generated method stub
-        Optional<Beer> isbeer=beerrepo.findById(id);
-        if(isbeer.isPresent()){
-            Beer beer= isbeer.get();
-            return mapper.map(beer, BeerDTO.class);
+        try {
+            Optional<Beer> isbeer=beerrepo.findById(id);
+            if(isbeer.isPresent()){
+                Beer beer= isbeer.get();
+                return mapper.map(beer, BeerDTO.class);
+            }
+             else throw new ResourceNotFoundException("No Matching found");
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
-         else throw new ResourceNotFoundException("No Matching found");
+      
     }
 
     public List<Beer> BeerbyIdBrewerie(Long id) throws Exception{
-        Brewerie brewerie= brewrepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brewerie not found"));
+       
+       try{ Brewerie brewerie= brewrepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brewerie not found"));
         List<Beer> beers= beerrepo.findallBeersByBrewerieId(brewerie.getId_brewerie());
         return beers;
+    } catch (Exception e) {
+        throw new Exception(e.getMessage());
+    }
         
     }
 

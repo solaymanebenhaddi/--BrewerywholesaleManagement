@@ -16,6 +16,7 @@ import com.brewery.manager.models.Beer;
 import com.brewery.manager.models.Brewerie;
 import com.brewery.manager.repository.BrewerieRepository;
 import com.brewery.manager.util.BrewMapper;
+import com.brewery.manager.util.ResourceNotFoundException;
 @Transactional
 @Service
 
@@ -31,47 +32,70 @@ public class BrowerieServicesImpl implements PublicDAO<BrewerieDTO> {
     private BrewMapper mapper;
 
     @Override
-    public BrewerieDTO create(BrewerieDTO o) {
-        Brewerie brewerie=new Brewerie();
+    public BrewerieDTO create(BrewerieDTO o) throws Exception {
+        try {
+            Brewerie brewerie=new Brewerie();
         brewerie.setAdresse(o.getAdresse());
         brewerie.setName(o.getName());
         brewrepo.save(brewerie);
         return mapper.map(brewerie, BrewerieDTO.class);
-    }
+    
+        } catch (Exception e) {
+           throw new Exception(e.getMessage());
+        }
+        }
 
     @Override
-    public BrewerieDTO update(BrewerieDTO o) {
-        return o;
-        // TODO Auto-generated method stub
+    public BrewerieDTO update(BrewerieDTO o) throws Exception {
+        try {
+        Brewerie brewerie=brewrepo.findById(o.getId_brewerie()).orElseThrow(()->new ResourceNotFoundException("NO matching found"));
+        brewerie.setAdresse(o.getAdresse());
+        brewerie.setName(o.getName());
+        brewrepo.save(brewerie);
+        return mapper.map(brewerie, BrewerieDTO.class);
+    
+        } catch (Exception e) {
+           throw new Exception(e.getMessage());
+        }
         
     }
 
 
     @Override
-    public List<BrewerieDTO> findAll() {
-        // TODO Auto-generated method stub
-        return null;
+    public List<Brewerie> findAll() throws Exception {
+    
+    try{
+        List<Brewerie> breweries=brewrepo.findAll();
+        return breweries;
+    } catch (Exception e) {
+        throw new Exception(e.getMessage());
+     }
     }
 
     @Override
-    public BrewerieDTO findById(long id) {
-        // TODO Auto-generated method stub
-        return null;
+    public BrewerieDTO findById(long id) throws Exception {
+        try{
+            Brewerie breweries=brewrepo.findById(id).orElseThrow(()->new ResourceNotFoundException("NO matching found"));
+            return mapper.map(breweries, BrewerieDTO.class);
+            
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+         }
     }
 
     @Override
     public ResponseEntity<?> delete(Long id) throws Exception {
-        return null;
-        // TODO Auto-generated method stub
+        try {
+            Brewerie breweries=brewrepo.findById(id).orElseThrow(()->new ResourceNotFoundException("NO matching found"));
+            brewrepo.delete(breweries);
+            ResponseEntity.status(200).build();
+            return ResponseEntity.ok(" beer has been deleted seccessefully"); 
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
         
     }
 
-    public Beer SellBeers(Long idBeer,Long quantity){
-
-
-        return null;
-        
-    }
 
     
     

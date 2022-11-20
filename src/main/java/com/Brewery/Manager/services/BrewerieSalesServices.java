@@ -47,8 +47,8 @@ public class BrewerieSalesServices implements PublicDAO<BrewerieSaleRequest> {
 
     @Override
     public BrewerieSalesDTO create(BrewerieSaleRequest salereq) throws Exception {
-
-        Wholesaler wholesale = wholesalerep.findById(salereq.getId_wholesale())
+try {
+            Wholesaler wholesale = wholesalerep.findById(salereq.getId_wholesale())
                 .orElseThrow(() -> new ResourceNotFoundException("Brewerie not whaole seller"));
         Beer beer = beerrepo.findById(salereq.getId_beer())
                 .orElseThrow(() -> new ResourceNotFoundException("Brewerie not whaole seller"));
@@ -70,7 +70,9 @@ public class BrewerieSalesServices implements PublicDAO<BrewerieSaleRequest> {
             BrewerieSalesDTO Brsale = mapper.map(Brwsale, BrewerieSalesDTO.class);
             return Brsale;
         } else throw new ResourceNotFoundException("U cannot add this records");
-    
+    } catch (Exception e) {
+        throw new Exception(e.getMessage());
+    }
     }
 
     @Override
@@ -99,21 +101,68 @@ public class BrewerieSalesServices implements PublicDAO<BrewerieSaleRequest> {
         }
     }
 
-    @Override
-    public ResponseEntity<?> delete(Long id) throws Exception {
-        return null;
-        // TODO Auto-generated method stub
+    public ResponseEntity<?> deleteSale(BrewerieSaleRequest o) throws Exception {
+        try {
+            Wholesaler wholesale = wholesalerep.findById(o.getId_wholesale())
+            .orElseThrow(() -> new ResourceNotFoundException("Brewerie not whaole seller"));
+            Beer beer = beerrepo.findById(o.getId_beer())
+            .orElseThrow(() -> new ResourceNotFoundException("Brewerie not whaole seller"));
+
+   Optional<BrewerieSales> bresales= BrewSalesRep.getBrewerieSalesByIds(beer.getId_beer(), wholesale.getId_wholesale());
+   if(bresales.isPresent()){
+    BrewerieSales brewerieSales=bresales.get();
+    
+    brewerieSales.setDateofsale(o.getDateofsale());
+    brewerieSales.setPrice_transaction(beer.getPrice()*o.getQuantity());
+    BrewSalesRep.delete(brewerieSales);
+    ResponseEntity.status(200).build();
+    return ResponseEntity.ok("Quot of beer its been deleted seccessefully");
+
+   }
+    else throw new ResourceNotFoundException("No Matching found for this sale");
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
 
     }
 
     @Override
-    public List<BrewerieSalesDTO> findAll() {
-        // TODO Auto-generated method stub
-        return null;
+    public List<BrewerieSalesDTO> findAll() throws Exception {
+        
+    try{
+        List<BrewerieSales> brewerieSales=BrewSalesRep.findAll();
+        return (List<BrewerieSalesDTO>) mapper.map(brewerieSales, BrewerieSalesDTO.class);
+    } catch (Exception e) {
+        throw new Exception(e.getMessage());
+    }
     }
 
     @Override
     public BrewerieSalesDTO findById(long id) throws Exception {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public BrewerieSalesDTO findByIDs(BrewerieSaleRequest o) throws Exception {
+        try {
+            Wholesaler wholesale = wholesalerep.findById(o.getId_wholesale())
+            .orElseThrow(() -> new ResourceNotFoundException("Brewerie not whaole seller"));
+            Beer beer = beerrepo.findById(o.getId_beer())
+            .orElseThrow(() -> new ResourceNotFoundException("Brewerie not whaole seller"));
+            BrewerieSales bresales= BrewSalesRep.getBrewerieSalesByIds(beer.getId_beer(), wholesale.getId_wholesale()).orElseThrow(()->new ResourceNotFoundException("NO match found !"));
+
+            return mapper.map(bresales, BrewerieSalesDTO.class);
+
+
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> delete(Long id) throws Exception {
         // TODO Auto-generated method stub
         return null;
     }

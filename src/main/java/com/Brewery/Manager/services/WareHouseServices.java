@@ -46,7 +46,7 @@ private WholesaleRepository salerrepo;
         ware.setAdresse(o.getAdresse());
         ware.setWholesaler(saler);
         warerepo.save(ware);
-        return mapper.map(warehouse, WareHouseDTO.class);
+        return mapper.map(ware, WareHouseDTO.class);
         }catch (Exception e) {
             throw new Exception(e.getMessage());
             }
