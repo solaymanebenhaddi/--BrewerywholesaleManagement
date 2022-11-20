@@ -14,6 +14,7 @@ import com.brewery.manager.payload.request.WarehouseRequest;
 import com.brewery.manager.repository.WareHouseRepository;
 import com.brewery.manager.repository.WholesaleRepository;
 import com.brewery.manager.util.BrewMapper;
+import com.brewery.manager.util.ResourceNotFoundException;
 @Transactional
 @Service
 public class WareHouseServices implements PublicDAO<WarehouseRequest> {
@@ -27,7 +28,7 @@ private WholesaleRepository salerrepo;
 
     @Override
     public WareHouseDTO create(WarehouseRequest o) throws Exception {
-        Wholesaler saler= salerrepo.findById(o.getId_wholesale()).orElseThrow(()->new Exception("No matching found"));
+        Wholesaler saler= salerrepo.findById(o.getId_wholesale()).orElseThrow(()->new ResourceNotFoundException("No matching found"));
         Warehouse warehouse=new Warehouse();
         warehouse.setAdresse(o.getAdresse());
         warehouse.setWholesaler(saler);

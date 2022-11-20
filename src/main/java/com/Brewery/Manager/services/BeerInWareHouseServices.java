@@ -19,6 +19,7 @@ import com.brewery.manager.repository.BeerRepository;
 import com.brewery.manager.repository.WareHouseRepository;
 import com.brewery.manager.repository.WholesaleRepository;
 import com.brewery.manager.util.BrewMapper;
+import com.brewery.manager.util.ResourceNotFoundException;
 @Transactional
 @Service
 public class BeerInWareHouseServices implements PublicDAO<BeerinwhRequest> {
@@ -37,8 +38,8 @@ public class BeerInWareHouseServices implements PublicDAO<BeerinwhRequest> {
 
     @Override
     public BeerInwhDTO create(BeerinwhRequest o) throws Exception {
-        Beer beer= beerrepo.findById(o.getId_beer()).orElseThrow(()->new Exception("No Matching found"));
-            Warehouse warehouse= warerepo.findById(o.getId_warehouse()).orElseThrow(()->new Exception("No Matching found"));
+        Beer beer= beerrepo.findById(o.getId_beer()).orElseThrow(()->new ResourceNotFoundException("No Matching found"));
+            Warehouse warehouse= warerepo.findById(o.getId_warehouse()).orElseThrow(()->new ResourceNotFoundException("No Matching found"));
 
         Optional<BeerInWarehouse> Isbeerinstock = beerhouserepo.getByIds(o.getId_beer(), o.getId_beer());
         if(Isbeerinstock.isPresent()){
@@ -57,7 +58,7 @@ public class BeerInWareHouseServices implements PublicDAO<BeerinwhRequest> {
 
     @Override
     public BeerInwhDTO update(BeerinwhRequest o) throws Exception {
-       BeerInWarehouse beerinstock = beerhouserepo.getByIds(o.getId_beer(), o.getId_warehouse()).orElseThrow(()->new Exception("No Matching Found"));
+       BeerInWarehouse beerinstock = beerhouserepo.getByIds(o.getId_beer(), o.getId_warehouse()).orElseThrow(()->new ResourceNotFoundException("No Matching Found"));
         //check if the stock is emty or not
         Long existingStock=null;
         if(o.getQuantity()>0){
@@ -72,7 +73,7 @@ public class BeerInWareHouseServices implements PublicDAO<BeerinwhRequest> {
             beerhouserepo.save(beerinstock);
              return mapper.map(beerinstock, BeerInwhDTO.class);
         }
-        else throw new Exception("This beer is no more availible");
+        else throw new ResourceNotFoundException("This beer is no more availible");
     }
 
     @Override

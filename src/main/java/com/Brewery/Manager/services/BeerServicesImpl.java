@@ -16,6 +16,7 @@ import com.brewery.manager.models.Brewerie;
 import com.brewery.manager.repository.BeerRepository;
 import com.brewery.manager.repository.BrewerieRepository;
 import com.brewery.manager.util.BrewMapper;
+import com.brewery.manager.util.ResourceNotFoundException;
 
 @Transactional
 @Service
@@ -33,7 +34,7 @@ public class BeerServicesImpl implements PublicDAO<BeerDTO> {
     @Override
     public BeerDTO create(BeerDTO beerrequ) throws Exception {
         
-        Brewerie brewerie= brewrepo.findById(beerrequ.getId_brewerie()).orElseThrow(() -> new Exception("Brewerie not found"));
+        Brewerie brewerie= brewrepo.findById(beerrequ.getId_brewerie()).orElseThrow(() -> new ResourceNotFoundException("Brewerie not found"));
         Beer beer=new Beer();
         beer.setName(beerrequ.getName());
         beer.setPrice(beerrequ.getPrice());
@@ -46,8 +47,8 @@ public class BeerServicesImpl implements PublicDAO<BeerDTO> {
 
     @Override
     public BeerDTO update(BeerDTO beerrequ) throws Exception {
-        Beer beer= beerrepo.findById(beerrequ.getId_beer()).orElseThrow(() -> new Exception("Beer not found"));
-        Brewerie brewerie= brewrepo.findById(beerrequ.getId_brewerie()).orElseThrow(() -> new Exception("Brewerie not found"));
+        Beer beer= beerrepo.findById(beerrequ.getId_beer()).orElseThrow(() -> new ResourceNotFoundException("Beer not found"));
+        Brewerie brewerie= brewrepo.findById(beerrequ.getId_brewerie()).orElseThrow(() -> new ResourceNotFoundException("Brewerie not found"));
         beer.setName(beerrequ.getName());
         beer.setPrice(beerrequ.getPrice());
         beer.setAlcohol(beerrequ.getAlcohol());
@@ -60,7 +61,7 @@ public class BeerServicesImpl implements PublicDAO<BeerDTO> {
 
     @Override
     public void delete(Long id) throws Exception {
-        Beer beer= beerrepo.findById(id).orElseThrow(() -> new Exception("Beer not found"));
+        Beer beer= beerrepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Beer not found"));
         beerrepo.deleteById(beer.getId_beer());
 
     }
@@ -82,11 +83,11 @@ public class BeerServicesImpl implements PublicDAO<BeerDTO> {
             Beer beer= isbeer.get();
             return mapper.map(beer, BeerDTO.class);
         }
-         else throw new Exception("No Matching found");
+         else throw new ResourceNotFoundException("No Matching found");
     }
 
     public List<Beer> BeerbyIdBrewerie(Long id) throws Exception{
-        Brewerie brewerie= brewrepo.findById(id).orElseThrow(() -> new Exception("Brewerie not found"));
+        Brewerie brewerie= brewrepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Brewerie not found"));
         List<Beer> beers= beerrepo.findallBeersByBrewerieId(brewerie.getId_brewerie());
         return beers;
         

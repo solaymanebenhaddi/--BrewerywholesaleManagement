@@ -21,6 +21,7 @@ import com.brewery.manager.repository.BrewerieSalesRepository;
 import com.brewery.manager.repository.WareHouseRepository;
 import com.brewery.manager.repository.WholesaleRepository;
 import com.brewery.manager.util.BrewMapper;
+import com.brewery.manager.util.ResourceNotFoundException;
 
 @Transactional
 @Service
@@ -47,10 +48,10 @@ public class BrewerieSalesServices implements PublicDAO<BrewerieSaleRequest> {
     public BrewerieSalesDTO create(BrewerieSaleRequest salereq) throws Exception {
 
         Wholesaler wholesale = wholesalerep.findById(salereq.getId_wholesale())
-                .orElseThrow(() -> new Exception("Brewerie not whaole seller"));
+                .orElseThrow(() -> new ResourceNotFoundException("Brewerie not whaole seller"));
         Beer beer = beerrepo.findById(salereq.getId_beer())
-                .orElseThrow(() -> new Exception("Brewerie not whaole seller"));
-        Warehouse warehouse=wareHouseRepository.finbyidandWholeseller(salereq.getId_warehouse(),wholesale.getId_wholesale()).orElseThrow(()->new Exception("No matching Warehouse exists"));
+                .orElseThrow(() -> new ResourceNotFoundException("Brewerie not whaole seller"));
+        Warehouse warehouse=wareHouseRepository.finbyidandWholeseller(salereq.getId_warehouse(),wholesale.getId_wholesale()).orElseThrow(()->new ResourceNotFoundException("No matching Warehouse exists"));
 
         System.out.println(" id beer req :"+salereq.getId_wholesale());
 
@@ -67,16 +68,16 @@ public class BrewerieSalesServices implements PublicDAO<BrewerieSaleRequest> {
             bHouseServices.create(reqBhouse);
             BrewerieSalesDTO Brsale = mapper.map(Brwsale, BrewerieSalesDTO.class);
             return Brsale;
-        } else throw new Exception("U cannot add this records");
+        } else throw new ResourceNotFoundException("U cannot add this records");
     
     }
 
     @Override
     public BrewerieSalesDTO update(BrewerieSaleRequest o) throws Exception {
         Wholesaler wholesale = wholesalerep.findById(o.getId_wholesale())
-                .orElseThrow(() -> new Exception("Brewerie not whaole seller"));
+                .orElseThrow(() -> new ResourceNotFoundException("Brewerie not whaole seller"));
         Beer beer = beerrepo.findById(o.getId_beer())
-                .orElseThrow(() -> new Exception("Brewerie not whaole seller"));
+                .orElseThrow(() -> new ResourceNotFoundException("Brewerie not whaole seller"));
 
        Optional<BrewerieSales> bresales= BrewSalesRep.getBrewerieSalesByIds(beer.getId_beer(), wholesale.getId_wholesale());
        if(bresales.isPresent()){
@@ -88,7 +89,7 @@ public class BrewerieSalesServices implements PublicDAO<BrewerieSaleRequest> {
         return mapper.map(brewerieSales, BrewerieSalesDTO.class);
 
        }
-        else throw new Exception("No Matching found for this sale");
+        else throw new ResourceNotFoundException("No Matching found for this sale");
     }
 
     @Override

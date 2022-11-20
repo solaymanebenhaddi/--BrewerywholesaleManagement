@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 
@@ -28,6 +30,7 @@ public class QuoteBeerInWrhouse implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @MapsId("id_devis")
     @JoinColumn(name = "id_devis", referencedColumnName = "id_devis")
+    @JsonIgnore
     private Quote quote;
 
     @MapsId("id_Brwrhs")
@@ -36,6 +39,7 @@ public class QuoteBeerInWrhouse implements Serializable {
         @JoinColumn(name="id_warehouse", referencedColumnName="id_warehouse")
     })
     @ManyToOne
+    @JsonIgnore
     private BeerInWarehouse bWarehouse;
 
     private long quantity;

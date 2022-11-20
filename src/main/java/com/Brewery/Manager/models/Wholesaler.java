@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Entity
@@ -30,6 +32,7 @@ public class Wholesaler {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "wholesaler")
 	@Fetch(FetchMode.JOIN)
+    @JsonIgnore
 	private List<BrewerieSales> BrewerieSales;
 
     

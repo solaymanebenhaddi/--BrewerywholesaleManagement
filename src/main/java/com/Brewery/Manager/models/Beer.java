@@ -20,6 +20,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Entity
@@ -41,6 +43,7 @@ public class Beer {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "beer")
 	@Fetch(FetchMode.JOIN)
+    @JsonIgnore
 	private List<BrewerieSales> BrewerieSales;
 
     public Beer(){

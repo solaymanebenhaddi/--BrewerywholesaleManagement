@@ -14,6 +14,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Entity
@@ -29,6 +31,7 @@ public class Brewerie {
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "brewerie")
     @Fetch(FetchMode.SELECT)
+    @JsonIgnore
     private List<Beer> beer;
     
 
