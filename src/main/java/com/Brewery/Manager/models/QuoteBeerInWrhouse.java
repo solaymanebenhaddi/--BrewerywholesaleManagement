@@ -1,22 +1,24 @@
 package com.brewery.manager.models;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
-import javax.persistence.DiscriminatorColumn;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 
 import lombok.Data;
-import net.bytebuddy.agent.builder.AgentBuilder.RedefinitionStrategy.DiscoveryStrategy;
+
 
 @Entity
-@Table(name = "Cabinet_Medecins")
+@Table(name = "QouteBeer")
 @Data
-public class QuoteBeerInWrhouse {
+public class QuoteBeerInWrhouse implements Serializable {
     
 
     @EmbeddedId
@@ -28,9 +30,12 @@ public class QuoteBeerInWrhouse {
     @JoinColumn(name = "id_devis", referencedColumnName = "id_devis")
     private Quote quote;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @MapsId("id")
-    @JoinColumn(name = "idbw", referencedColumnName = "idbw")
+    @MapsId("id_Brwrhs")
+    @JoinColumns({
+        @JoinColumn(name="id_beer", referencedColumnName="id_beer"),
+        @JoinColumn(name="id_warehouse", referencedColumnName="id_warehouse")
+    })
+    @ManyToOne
     private BeerInWarehouse bWarehouse;
 
     private long quantity;
@@ -42,11 +47,14 @@ public class QuoteBeerInWrhouse {
         super();
     }
 
-    public QuoteBeerInWrhouse(Quote quote,BeerInWarehouse bWarehouse,long quantity,Double price){
+    public QuoteBeerInWrhouse(Quote quote,BeerInWarehouse bWarehouse,long quantity,Double price,double discount){
 
         super();
-        this.QtBrHouseIDs=new QuateandBeersHouseIDs(quote.id_devis, bWarehouse);
+        this.QtBrHouseIDs=new QuateandBeersHouseIDs(quote.id_devis, bWarehouse.getIdbw());
+        this.bWarehouse=bWarehouse;
+        this.quote=quote;
         this.quantity=quantity;
         this.price=price;
+        this.discount=discount;
     }
 }

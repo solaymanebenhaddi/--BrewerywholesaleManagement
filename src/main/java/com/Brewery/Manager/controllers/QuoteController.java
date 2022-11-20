@@ -1,9 +1,13 @@
 package com.brewery.manager.controllers;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,17 +21,23 @@ import lombok.val;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/requestquote")
+@RequestMapping("/api/quote")
 public class QuoteController{
 
     @Autowired
     private QuoteBeerinWHosService quoteBeerinWHosService;
-    @PostMapping("commande")
-    public QuoteBeerInWrhouse Commande(@Valid @RequestBody QuoteBrInWHouseRequest request) throws Exception{
+    @PostMapping("/addquote")
+    public QuoteBeerInWrhouse NewQuate(@Valid @RequestBody QuoteBrInWHouseRequest request) throws Exception{
 
             return quoteBeerinWHosService.create(request);
 
 
+    }
+
+    @GetMapping("generateQuote/{id}")
+    public List<QuoteBeerInWrhouse> GenerateQuot(@Valid @PathVariable("id") Long id) throws Exception{
+            return quoteBeerinWHosService.findById(id);
+            
     }
     
 }

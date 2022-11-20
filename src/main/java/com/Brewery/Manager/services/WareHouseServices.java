@@ -27,7 +27,7 @@ private WholesaleRepository salerrepo;
 
     @Override
     public WareHouseDTO create(WarehouseRequest o) throws Exception {
-        Wholesaler saler= salerrepo.findById(o.getWholesaler_id()).orElseThrow(()->new Exception("No matching found"));
+        Wholesaler saler= salerrepo.findById(o.getId_wholesale()).orElseThrow(()->new Exception("No matching found"));
         Warehouse warehouse=new Warehouse();
         warehouse.setAdresse(o.getAdresse());
         warehouse.setWholesaler(saler);

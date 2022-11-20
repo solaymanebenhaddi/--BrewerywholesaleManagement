@@ -1,5 +1,9 @@
 package com.brewery.manager.models;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,8 +13,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import lombok.Data;
 
@@ -30,6 +38,10 @@ public class Beer {
     @MapsId("id_brewerie")
     @JoinColumn(name = "id_brewerie", referencedColumnName = "id_brewerie",nullable = false, columnDefinition = "int default 1")
     private Brewerie brewerie;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "beer")
+	@Fetch(FetchMode.JOIN)
+	private List<BrewerieSales> BrewerieSales;
 
     public Beer(){
         super();

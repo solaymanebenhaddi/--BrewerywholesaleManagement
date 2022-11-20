@@ -9,5 +9,5 @@ public class BeerinwhRequest {
 
     private Long id_warehouse;
 
-    private Long ExistingBeerQte;
+    private Long quantity;
 }

@@ -15,7 +15,7 @@ public class BeerInWarehouseIDs implements Serializable {
     @Column(name = "id_beer")
     private Long id_beer;
 
-    @Column(name = "id_wholesale")
+    @Column(name = "id_warehouse")
     private Long id_warehouse;
 
     
@@ -23,9 +23,9 @@ public class BeerInWarehouseIDs implements Serializable {
         super();
     }
 
-    public BeerInWarehouseIDs(long beer_id,Long id_warehouse){
+    public BeerInWarehouseIDs(long id_beer,Long id_warehouse){
        super();
-       this.id_beer=beer_id;
+       this.id_beer=id_beer;
        this.id_warehouse=id_warehouse;
     }
 }

@@ -1,5 +1,6 @@
 package com.brewery.manager.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,15 +12,19 @@ import com.brewery.manager.DAO.PublicDAO;
 import com.brewery.manager.Dto.BrewerieSalesDTO;
 import com.brewery.manager.models.Beer;
 import com.brewery.manager.models.BrewerieSales;
+import com.brewery.manager.models.Warehouse;
 import com.brewery.manager.models.Wholesaler;
+import com.brewery.manager.payload.request.BeerinwhRequest;
+import com.brewery.manager.payload.request.BrewerieSaleRequest;
 import com.brewery.manager.repository.BeerRepository;
 import com.brewery.manager.repository.BrewerieSalesRepository;
+import com.brewery.manager.repository.WareHouseRepository;
 import com.brewery.manager.repository.WholesaleRepository;
 import com.brewery.manager.util.BrewMapper;
 
 @Transactional
 @Service
-public class BrewerieSalesServices implements PublicDAO<BrewerieSalesDTO> {
+public class BrewerieSalesServices implements PublicDAO<BrewerieSaleRequest> {
 
     @Autowired
     BrewerieSalesRepository BrewSalesRep;
@@ -30,31 +35,50 @@ public class BrewerieSalesServices implements PublicDAO<BrewerieSalesDTO> {
     BeerRepository beerrepo;
 
     @Autowired
+    BeerInWareHouseServices bHouseServices;
+    
+    @Autowired
+    WareHouseRepository wareHouseRepository;
+
+    @Autowired
     BrewMapper mapper;
 
     @Override
-    public BrewerieSalesDTO create(BrewerieSalesDTO salereq) throws Exception {
+    public BrewerieSalesDTO create(BrewerieSaleRequest salereq) throws Exception {
+
         Wholesaler wholesale = wholesalerep.findById(salereq.getId_wholesale())
                 .orElseThrow(() -> new Exception("Brewerie not whaole seller"));
-        Beer beer = beerrepo.findById(salereq.getId_wholesale())
+        Beer beer = beerrepo.findById(salereq.getId_beer())
                 .orElseThrow(() -> new Exception("Brewerie not whaole seller"));
+        Warehouse warehouse=wareHouseRepository.finbyidandWholeseller(salereq.getId_warehouse(),wholesale.getId_wholesale()).orElseThrow(()->new Exception("No matching Warehouse exists"));
 
-        double transaction = beer.getPrice() * salereq.getQuantity();
-        BrewerieSales Brwsale = new BrewerieSales(beer, wholesale, transaction, salereq.getQuantity());
-        BrewSalesRep.save(Brwsale);
+        System.out.println(" id beer req :"+salereq.getId_wholesale());
 
-        BrewerieSalesDTO Brsale = mapper.map(Brwsale, BrewerieSalesDTO.class);
-        return Brsale;
+        Optional<BrewerieSales>  brewerieSales= BrewSalesRep.getBrewerieSalesByIds(beer.getId_beer(),wholesale.getId_wholesale());
+        if(brewerieSales.isEmpty()){
+
+            double transaction = beer.getPrice() * salereq.getQuantity();
+            BrewerieSales Brwsale = new BrewerieSales(beer, wholesale, transaction, salereq.getQuantity(),LocalDate.now());
+            BrewSalesRep.save(Brwsale);
+            BeerinwhRequest reqBhouse = new BeerinwhRequest();
+            reqBhouse.setId_beer(beer.getId_beer());
+            reqBhouse.setId_warehouse(warehouse.getId_warehouse());
+            reqBhouse.setQuantity(salereq.getQuantity());
+            bHouseServices.create(reqBhouse);
+            BrewerieSalesDTO Brsale = mapper.map(Brwsale, BrewerieSalesDTO.class);
+            return Brsale;
+        } else throw new Exception("U cannot add this records");
+    
     }
 
     @Override
-    public BrewerieSalesDTO update(BrewerieSalesDTO o) throws Exception {
+    public BrewerieSalesDTO update(BrewerieSaleRequest o) throws Exception {
         Wholesaler wholesale = wholesalerep.findById(o.getId_wholesale())
                 .orElseThrow(() -> new Exception("Brewerie not whaole seller"));
-        Beer beer = beerrepo.findById(o.getId_wholesale())
+        Beer beer = beerrepo.findById(o.getId_beer())
                 .orElseThrow(() -> new Exception("Brewerie not whaole seller"));
 
-       Optional<BrewerieSales> bresales= BrewSalesRep.getBrewerieSalesByIds(o.getId_beer(), o.getId_wholesale());
+       Optional<BrewerieSales> bresales= BrewSalesRep.getBrewerieSalesByIds(beer.getId_beer(), wholesale.getId_wholesale());
        if(bresales.isPresent()){
         BrewerieSales brewerieSales=bresales.get();
         

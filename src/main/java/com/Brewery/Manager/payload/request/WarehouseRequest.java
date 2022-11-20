@@ -7,6 +7,6 @@ public class WarehouseRequest {
 
     private String Adresse;
 
-    private Long wholesaler_id;
+    private Long id_wholesale;
     
 }

@@ -17,6 +17,7 @@ import lombok.Data;
 @Table(name = "Beer_wholesaler")
 @Data
 public class BrewerieSales {
+
     @EmbeddedId
     private BeerWholesaleIDs id;
 
@@ -40,13 +41,14 @@ public class BrewerieSales {
        super(); 
     }
 
-    public BrewerieSales(Beer beer,Wholesaler wholesaler,double price,long quantity){
+    public BrewerieSales(Beer beer,Wholesaler wholesaler,double price,long quantity,LocalDate dateofsale){
         super(); 
         this.id =  new BeerWholesaleIDs(beer.getId_beer(),wholesaler.getId_wholesale());
         this.beer=beer;
         this.wholesaler=wholesaler;
         this.price_transaction=price;
         this.quantity=quantity;
+        this.dateofsale=dateofsale;
      }
 
 }

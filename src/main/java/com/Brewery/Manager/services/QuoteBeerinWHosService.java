@@ -47,17 +47,20 @@ public class QuoteBeerinWHosService implements PublicDAO<QuoteBrInWHouseRequest>
 
 
        //find if this whole seller exist
-       Wholesaler wholesaler= wholesaleRepository.findById(o.getId_wholesale()).orElseThrow(()-> new Exception("No matching wholeseller Found ! "));
+        Wholesaler wholesaler= wholesaleRepository.findById(o.getId_wholesale()).orElseThrow(()-> new Exception("No matching wholeseller Found ! "));
 
        // find if warehouse of this whole seller existe :
-        Warehouse warehouse=wareHouseRepository.finbyidandWholeseller(o.getId_warehouse(),wholesaler.getId_wholesale()).orElseThrow(()->new Exception("No matching wholeseller Found !"));
+        Warehouse warehouse=wareHouseRepository.finbyidandWholeseller(o.getId_warehouse(),wholesaler.getId_wholesale()).orElseThrow(()->new Exception("No matching warehouse Found !"));
         //find if beer is in warehouse :
-        BeerInWarehouse beerhouse=beerInwareHouseRepository.getByIds(o.getId_beer(),warehouse.getId_warehouse()).orElseThrow(()-> new Exception("No matching exist in ths warehouse"));
+        BeerInWarehouse beerhouse=beerInwareHouseRepository.getByIds(o.getId_beer(),warehouse.getId_warehouse()).orElseThrow(()-> new Exception("No Beer matching exist in ths warehouse"));
 
         // find out if  the quantity above or equale what in asked in the request  :
          // retrive the object relatied to beer and warehouse :
-        BeerInWarehouse qtBeerInWarehouse=beerInwareHouseRepository.getByIdsandQte(beerhouse.getBeer().getId_beer(), beerhouse.getWarehouse().getId_warehouse(),o.getQuantity()).orElseThrow(()-> new Exception("No matching exist correspand to this Qte"));
-        
+         BeerInWarehouse qtBeerInWarehouse=null;
+         if(o.getQuantity()>0){
+            qtBeerInWarehouse=beerInwareHouseRepository.getByIdsandQte(beerhouse.getBeer().getId_beer(), beerhouse.getWarehouse().getId_warehouse(),o.getQuantity()).orElseThrow(()-> new Exception("The number of beers ordered cannot be greater than the wholesaler's stock"));
+         } else throw new Exception("The order cannot be empty");    
+                
         // check the discount to apply 
         double discount = o.getQuantity()>=20?0.2:(o.getQuantity()>=10?0.1:0);
         
@@ -71,7 +74,7 @@ public class QuoteBeerinWHosService implements PublicDAO<QuoteBrInWHouseRequest>
       quoteRepository.save(NewDevis);
 
       //after conferm that all is OK we save this transaction :
-      QuoteBeerInWrhouse devBeersHouse= new QuoteBeerInWrhouse(NewDevis, qtBeerInWarehouse,o.getQuantity(),price);
+      QuoteBeerInWrhouse devBeersHouse= new QuoteBeerInWrhouse(NewDevis, qtBeerInWarehouse,o.getQuantity(),price,discount);
 
       quotbwrepo.save(devBeersHouse);
 
@@ -92,14 +95,14 @@ public class QuoteBeerinWHosService implements PublicDAO<QuoteBrInWHouseRequest>
 
     @Override
     public List<?> findAll() {
-        // TODO Auto-generated method stub
-        return null;
+       
+        return quotbwrepo.findAll();
     }
 
     @Override
-    public Object findById(long id) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+    public List<QuoteBeerInWrhouse> findById(long id) throws Exception {
+        
+        return quotbwrepo.getQuoteBeerByQuoteID(id);
     }
     
 }

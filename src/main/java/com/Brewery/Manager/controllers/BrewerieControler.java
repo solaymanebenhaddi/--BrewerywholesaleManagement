@@ -19,6 +19,7 @@ import com.brewery.manager.Dto.BrewerieDTO;
 import com.brewery.manager.Dto.BrewerieSalesDTO;
 import com.brewery.manager.models.Beer;
 import com.brewery.manager.models.BrewerieSales;
+import com.brewery.manager.payload.request.BrewerieSaleRequest;
 import com.brewery.manager.services.BeerServicesImpl;
 import com.brewery.manager.services.BrewerieSalesServices;
 import com.brewery.manager.services.BrowerieServicesImpl;
@@ -65,8 +66,8 @@ public class BrewerieControler {
     }
 
 
-    @PostMapping("/NewSale")
-    public BrewerieSalesDTO addNewSale(@RequestBody BrewerieSalesDTO Salerequest) throws Exception{
+    @PostMapping("/newsale")
+    public BrewerieSalesDTO addNewSale(@Valid @RequestBody BrewerieSaleRequest Salerequest) throws Exception{
         BrewerieSalesDTO sale = brewerieSalesServices.create(Salerequest);
         return sale;
    

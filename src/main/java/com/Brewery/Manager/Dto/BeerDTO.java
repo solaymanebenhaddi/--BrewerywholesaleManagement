@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 public class BeerDTO {
-    private long id_beer;
+    private Long id_beer;
     private String Name;
     private String Alcohol;
     private double Price;

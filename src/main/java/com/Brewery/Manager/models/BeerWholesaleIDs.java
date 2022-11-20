@@ -23,9 +23,9 @@ public class BeerWholesaleIDs implements Serializable {
         super();
     }
 
-    public BeerWholesaleIDs(long beer_id,Long wholesale_id){
+    public BeerWholesaleIDs(long id_beer,Long wholesale_id){
        super();
-       this.id_beer=beer_id;
+       this.id_beer=id_beer;
        this.id_wholesale=wholesale_id;
     }
 }

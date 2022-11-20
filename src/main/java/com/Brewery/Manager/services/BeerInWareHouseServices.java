@@ -37,13 +37,15 @@ public class BeerInWareHouseServices implements PublicDAO<BeerinwhRequest> {
 
     @Override
     public BeerInwhDTO create(BeerinwhRequest o) throws Exception {
+        Beer beer= beerrepo.findById(o.getId_beer()).orElseThrow(()->new Exception("No Matching found"));
+            Warehouse warehouse= warerepo.findById(o.getId_warehouse()).orElseThrow(()->new Exception("No Matching found"));
+
         Optional<BeerInWarehouse> Isbeerinstock = beerhouserepo.getByIds(o.getId_beer(), o.getId_beer());
         if(Isbeerinstock.isPresent()){
             this.update(o);
         }else{
-            Beer beer= beerrepo.findById(o.getId_beer()).orElseThrow(()->new Exception("No Matching found"));
-            Warehouse warehouse= warerepo.findById(o.getId_warehouse()).orElseThrow(()->new Exception("No Matching found"));
-            BeerInWarehouse BeerStock=new BeerInWarehouse(beer,warehouse,o.getExistingBeerQte());
+            
+            BeerInWarehouse BeerStock=new BeerInWarehouse(beer,warehouse,o.getQuantity());
             beerhouserepo.save(BeerStock);
 
             return mapper.map(BeerStock, BeerInwhDTO.class);
@@ -58,10 +60,10 @@ public class BeerInWareHouseServices implements PublicDAO<BeerinwhRequest> {
        BeerInWarehouse beerinstock = beerhouserepo.getByIds(o.getId_beer(), o.getId_warehouse()).orElseThrow(()->new Exception("No Matching Found"));
         //check if the stock is emty or not
         Long existingStock=null;
-        if(o.getExistingBeerQte()>0){
-            existingStock = beerinstock.getExistingBeerQte()>0 ? beerinstock.getExistingBeerQte()+ o.getExistingBeerQte() : o.getExistingBeerQte();
+        if(o.getQuantity()>0){
+            existingStock = beerinstock.getExistingBeerQte()>0 ? beerinstock.getExistingBeerQte()+ o.getQuantity(): o.getQuantity();
         }else{
-            existingStock = beerinstock.getExistingBeerQte()+ o.getExistingBeerQte()>=0 ? beerinstock.getExistingBeerQte()+ o.getExistingBeerQte() : -1;
+            existingStock = beerinstock.getExistingBeerQte()+ o.getQuantity()>=0 ? beerinstock.getExistingBeerQte()+ o.getQuantity() : -1;
         }
         
         if(existingStock!=-1){
